@@ -1,0 +1,27 @@
+{
+  "name": "pi-subagents",
+  "version": "0.1.0",
+  "description": "Parallel throwaway subagents for pi.",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "pi",
+    "subagents"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/je-boska/pi-subagents.git"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*",
+    "typebox": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ]
+  }
+}
