@@ -245,6 +245,12 @@ async function runSubagent(
 				const event = JSON.parse(line);
 				if (event.type === "message_end" && event.message)
 					messages.push(event.message);
+				if (event.type === "agent_end") {
+					if (Array.isArray(event.messages))
+						messages.splice(0, messages.length, ...event.messages);
+					finish(0);
+					kill();
+				}
 			} catch {
 				// Ignore non-JSON noise.
 			}
