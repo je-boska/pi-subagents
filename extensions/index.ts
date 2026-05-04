@@ -485,7 +485,7 @@ export default function subagentsExtension(pi: ExtensionAPI) {
 				new Set(details.results.map((r) => r.tier)),
 			).join(",");
 			const status = failed
-				? theme.fg("warning", `${ok}/${total} ok`)
+				? theme.fg("warning", `${ok}/${total} ok, ${failed} failed`)
 				: theme.fg("success", `${ok}/${total} ok`);
 			const ids = details.results.map((r) => r.id).join(", ");
 			return compact(
