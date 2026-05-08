@@ -21,7 +21,7 @@ const MAX_CONCURRENCY = 3;
 const DEFAULT_OUTPUT_LIMIT = 2500;
 const TIMEOUT_MS = 180_000;
 
-type Tier = "easy" | "standard" | "hard";
+type Tier = "very easy" | "easy" | "standard" | "hard";
 type ToolMode = "none" | "read_only" | "read_bash" | "web";
 
 type TaskInput = {
@@ -53,6 +53,8 @@ function tierDefaults(tier: Tier): {
 	thinking: "high" | "xhigh";
 } {
 	switch (tier) {
+		case "very easy":
+			return { model: "gemma4:e4b-128k", thinking: "high" };
 		case "easy":
 			return { model: "openai-codex/gpt-5.4", thinking: "high" };
 		case "standard":
@@ -326,9 +328,12 @@ function compactText(value: string, max = 90): string {
 	return `${oneLine.slice(0, max - 1)}…`;
 }
 
-const TierSchema = StringEnum(["easy", "standard", "hard"] as const, {
-	default: "standard",
-});
+const TierSchema = StringEnum(
+	["very easy", "easy", "standard", "hard"] as const,
+	{
+		default: "standard",
+	},
+);
 const ToolSchema = StringEnum(
 	["none", "read_only", "read_bash", "web"] as const,
 	{ default: "read_only" },
@@ -365,14 +370,14 @@ const ParamsSchema = Type.Object({
 
 export default function subagentsExtension(pi: ExtensionAPI) {
 	pi.on("before_agent_start", async (event) => ({
-		systemPrompt: `${event.systemPrompt}\n\n## Subagents\n\nUse the \`subagents\` tool proactively for isolated parallel research that would otherwise fill main context: web/doc lookup, large/reference codebase reconnaissance, independent investigations, or comparing APIs/patterns. Batch independent tasks in one call.\n\nDo not use subagents for tiny direct questions, current-repo edits, destructive actions, secrets, commits, or pushes. Main session owns writes.\n\nChoose defaults: easy = quick lookup/recon; standard = normal investigation; hard = rare/deep ambiguity. For web/current docs use tools="web". For codebase scan use tools="read_only" unless commands are necessary. Give concrete task, cwd when relevant, strict concise output format, and ask for sources.`,
+		systemPrompt: `${event.systemPrompt}\n\n## Subagents\n\nUse the \`subagents\` tool proactively for isolated parallel research that would otherwise fill main context: web/doc lookup, large/reference codebase reconnaissance, independent investigations, or comparing APIs/patterns. Batch independent tasks in one call.\n\nDo not use subagents for tiny direct questions, current-repo edits, destructive actions, secrets, commits, or pushes. Main session owns writes.\n\nChoose defaults: very easy = tiny lookup/sanity check; easy = quick lookup/recon; standard = normal investigation; hard = rare/deep ambiguity. For web/current docs use tools="web". For codebase scan use tools="read_only" unless commands are necessary. Give concrete task, cwd when relevant, strict concise output format, and ask for sources.`,
 	}));
 
 	pi.registerCommand("subagents", {
 		description: "Show subagents extension defaults",
 		handler: async (_args, ctx) => {
 			ctx.ui.notify(
-				"subagents: easy gpt-5.4 high, standard gpt-5.4 xhigh, hard gpt-5.5 high; max 6 tasks / 3 concurrent",
+				"subagents: very easy gemma4:e4b-128k high, easy gpt-5.4 high, standard gpt-5.4 xhigh, hard gpt-5.5 high; max 6 tasks / 3 concurrent",
 				"info",
 			);
 		},

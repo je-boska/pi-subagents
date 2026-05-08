@@ -8,7 +8,7 @@ This extension adds a `subagents` tool that starts isolated Pi sessions for rese
 
 - Run one or more subagents in parallel
 - Isolated throwaway sessions with `--no-session`
-- Tiered model defaults: `easy`, `standard`, `hard`
+- Tiered model defaults: `very easy`, `easy`, `standard`, `hard`
 - Tool modes: `none`, `read_only`, `read_bash`, `web`
 - Guard extension blocks nested Pi spawning, writes, commits, and pushes
 - Compact tool rendering
@@ -38,6 +38,13 @@ Or inspect defaults:
 ```txt
 /subagents
 ```
+
+Tier defaults:
+
+- `very easy`: `gemma4:e4b-128k`
+- `easy`: `openai-codex/gpt-5.4`
+- `standard`: `openai-codex/gpt-5.4`
+- `hard`: `openai-codex/gpt-5.5`
 
 ## Requirements
 
