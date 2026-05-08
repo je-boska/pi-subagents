@@ -370,7 +370,7 @@ const ParamsSchema = Type.Object({
 
 export default function subagentsExtension(pi: ExtensionAPI) {
 	pi.on("before_agent_start", async (event) => ({
-		systemPrompt: `${event.systemPrompt}\n\n## Subagents\n\nUse the \`subagents\` tool proactively for isolated parallel research that would otherwise fill main context: web/doc lookup, large/reference codebase reconnaissance, independent investigations, or comparing APIs/patterns. Batch independent tasks in one call.\n\nDo not use subagents for tiny direct questions, current-repo edits, destructive actions, secrets, commits, or pushes. Main session owns writes.\n\nChoose defaults: very easy = tiny lookup/sanity check; easy = quick lookup/recon; standard = normal investigation; hard = rare/deep ambiguity. For web/current docs use tools="web". For codebase scan use tools="read_only" unless commands are necessary. Give concrete task, cwd when relevant, strict concise output format, and ask for sources.`,
+		systemPrompt: `${event.systemPrompt}\n\n## Subagents\n\nUse the \`subagents\` tool proactively for isolated parallel research that would otherwise fill main context: web/doc lookup, large/reference codebase reconnaissance, independent investigations, or comparing APIs/patterns. Batch independent tasks in one call.\n\nDo not use subagents for tiny direct questions, current-repo edits, destructive actions, secrets, commits, or pushes. Main session owns writes.\n\nChoose defaults: very easy = bounded evidence-based scouting/sanity checks; easy = quick lookup/recon; standard = normal investigation; hard = rare/deep ambiguity. Use very easy with tools="read_only" for cheap repo reconnaissance where a fast local model can absorb noisy search/read output and return candidate files, functions, or facts. Require paths/line numbers and uncertainty. Treat very easy output as candidates/hints only; verify before editing or making assumptions. For web/current docs use tools="web". For codebase scan use tools="read_only" unless commands are necessary. Give concrete task, cwd when relevant, strict concise output format, and ask for sources.`,
 	}));
 
 	pi.registerCommand("subagents", {
@@ -393,6 +393,8 @@ export default function subagentsExtension(pi: ExtensionAPI) {
 			"Run isolated parallel subagents for web/docs lookup, large codebase reconnaissance, or independent investigations; returns concise summaries with sources.",
 		promptGuidelines: [
 			"Use subagents proactively for web/doc lookup, large/reference codebase scans, and independent investigations that would otherwise pollute main context.",
+			"Use subagents tier 'very easy' for bounded, evidence-based scouting where wrong answers are cheap to verify: unknown entry-point search, likely file/function candidates, grep triage, small file summaries, or config extraction.",
+			"For subagents tier 'very easy', require file paths/line numbers and treat output as candidate hints; verify before editing or relying on assumptions.",
 			"Do not use subagents for edits, writes, destructive actions, secrets, commits, pushes, or trivial questions.",
 		],
 		parameters: ParamsSchema,

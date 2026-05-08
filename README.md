@@ -46,6 +46,8 @@ Tier defaults:
 - `standard`: `openai-codex/gpt-5.4`
 - `hard`: `openai-codex/gpt-5.5`
 
+Use `very easy` for bounded, evidence-based scouting where wrong answers are cheap to verify: unknown entry-point search, likely file/function candidates, grep triage, small file summaries, or config extraction. Prefer `tools: "read_only"`, require paths/line numbers, and treat results as candidates to verify before editing or making assumptions.
+
 ## Requirements
 
 - Pi installed globally or available through the current Pi invocation
